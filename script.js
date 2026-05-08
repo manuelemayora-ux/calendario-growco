@@ -74,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const match = url.match(driveRegex);
         
         if (match && match[1]) {
-            // Convierte el enlace de vista al formato de descarga directa
-            return `https://drive.google.com/uc?id=${match[1]}`;
+            // Usa la API de thumbnail para evitar los bloqueos de Drive en etiquetas <img>
+            return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
         }
         
         // Si no es un enlace de Drive, lo devuelve tal cual
@@ -102,8 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let mediaHTML = '';
             if (directImgUrl) {
-                // Si hay URL, mostrar la imagen ocupando todo el espacio
-                mediaHTML = `<img src="${directImgUrl}" alt="Contenido Visual" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0;">`;
+                // Si hay URL, mostrar la imagen ocupando todo el espacio, con fallback de error
+                mediaHTML = `<img src="${directImgUrl}" alt="Contenido Visual" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0;" onerror="this.onerror=null; this.outerHTML='<div style=\\'padding:2rem; text-align:center; color:var(--accent-blue);\\'><p>⚠️</p><p style=\\'font-size:0.85rem;\\'>Imagen no disponible o sin permisos públicos</p></div>';">`;
             } else {
                 // Si no hay URL, mostrar la descripción en texto
                 mediaHTML = `<p>📸 ${visualDesc}</p>`;
